@@ -41,6 +41,8 @@ public class LevelManager : MonoBehaviour {
 			vertex.input.AddVertex (vertex);
 			vertex.output.AddVertex (vertex);
 		}
+
+		nodes [0].SelectNode ();
 	}
 }
 

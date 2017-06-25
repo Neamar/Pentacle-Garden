@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Node : MonoBehaviour {
+	public Material inactiveMaterial;
+	public Material activeMaterial;
+
 	private List<Vertex> vertices = new List<Vertex>();
 
 	public void AddVertex(Vertex vertex) {
@@ -11,5 +14,15 @@ public class Node : MonoBehaviour {
 		}
 
 		vertices.Add(vertex);
+	}
+
+	public void SelectNode() {
+		MeshRenderer meshRenderer = transform.Find ("Sphere").GetComponent<MeshRenderer> () as MeshRenderer;
+		meshRenderer.material = activeMaterial;
+	}
+
+	public void DeSelectNode() {
+		MeshRenderer meshRenderer = transform.Find ("Sphere").GetComponent<MeshRenderer> () as MeshRenderer;
+		meshRenderer.material = inactiveMaterial;
 	}
 }
