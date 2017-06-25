@@ -10,7 +10,6 @@ public class VertexDrawer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		lr = gameObject.GetComponent<LineRenderer>();
-		lr.SetColors (Color.green, Color.green);
 
 		DrawLine (input.transform.position, output.transform.position, Color.blue);
 	}
