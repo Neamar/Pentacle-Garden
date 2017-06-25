@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour {
-	public List<Level> levelList = new List<Level>();
-
 	public GameObject nodePrefab;
 	public GameObject vertexPrefab;
 
@@ -14,7 +12,7 @@ public class LevelManager : MonoBehaviour {
 
 
 	public void SetupLevel(int levelNumber) {
-		Level level = levelList [levelNumber];
+		Level level = Level.Get(levelNumber);
 
 		nodes = new List<Node> ();
 		vertices = new List<Vertex> ();
@@ -27,12 +25,12 @@ public class LevelManager : MonoBehaviour {
 			nodes.Add (node);
 		}
 
-		foreach(Vector2 vector in level.vertices) {
+		foreach(V vector in level.vertices) {
 			GameObject vertexObject = Instantiate (vertexPrefab) as GameObject;
 
 			Vertex vertex = vertexObject.GetComponent<Vertex> ();
-			vertex.input = nodes[(int) vector.x];
-			vertex.output = nodes[(int) vector.y];
+			vertex.input = nodes[(int) vector.input];
+			vertex.output = nodes[(int) vector.output];
 
 			// Add to our global vertices list
 			vertices.Add (vertex);
@@ -42,15 +40,6 @@ public class LevelManager : MonoBehaviour {
 			vertex.output.AddVertex (vertex);
 		}
 
-		nodes [0].SelectNode ();
+		nodes[0].SelectNode ();
 	}
-}
-
-
-[System.Serializable]
-public class Level
-{
-	public string name;
-	public Vector2[] nodes;
-	public Vector2[] vertices;
 }
