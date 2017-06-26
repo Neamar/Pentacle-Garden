@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	public static GameManager instance;
 
-	private LevelManager levelManager;
+	public Level currentLevel;
 
 	//Awake is always called before any Start functions
 	void Awake()
@@ -21,13 +21,13 @@ public class GameManager : MonoBehaviour {
 		//Sets this to not be destroyed when reloading scene
 		DontDestroyOnLoad(gameObject);
 
-		levelManager = GetComponent<LevelManager>() as LevelManager;
+		currentLevel = GetComponent<Level>() as Level;
 
 		//Call the InitGame function to initialize the first level 
 		InitLevel();
 	}
 
 	void InitLevel() {
-		levelManager.SetupLevel (0);
+		currentLevel.SetupLevel (0);
 	}
 }

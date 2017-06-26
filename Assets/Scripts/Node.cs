@@ -16,6 +16,10 @@ public class Node : MonoBehaviour {
 		vertices.Add(vertex);
 	}
 
+	void OnMouseDown() {
+		Debug.Log ("CLICK");
+	}
+
 	public void SelectNode() {
 		MeshRenderer meshRenderer = transform.Find ("Sphere").GetComponent<MeshRenderer> () as MeshRenderer;
 		meshRenderer.material = activeMaterial;

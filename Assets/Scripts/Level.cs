@@ -1,51 +1,56 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class V {
-	public int input;
-	public int output;
+public class Level: MonoBehaviour {
+	public GameObject nodePrefab;
+	public GameObject vertexPrefab;
 
-	public V(int i, int o) {
-		this.input = i;
-		this.output = o;
-	}
-}
+	// Current level nodes
+	private List<Node> nodes;
+	private List<Vertex> vertices;
 
-[System.Serializable]
-public class Level
-{
-	public string name;
-	public Vector2[] nodes;
-	public V[] vertices;
+	public Node selectedNode;
 
-	public Level(string name, Vector2[] n, V[] v) {		
-		this.name = name;
-		this.nodes = n;
-		this.vertices = v;
-	}
 
-	public static Level Get(int n) {
-		switch(n) {
-		case 0:
-			Vector2[] nodes = {
-				new Vector2 (-3, -3),
-				new Vector2 (-3, 3),
-				new Vector2 (3, 3),
-				new Vector2 (3, -3),
-				new Vector2 (0, -5),
-			};
-			V[] vertices = {
-				new V (0, 1),
-				new V (1, 2),
-				new V (2, 3),
-				new V (3, 4),
-				new V (4, 0),
-				new V (0, 3)
-			};
+	public void SetupLevel(int levelNumber) {
+		LevelData level = LevelData.Get(levelNumber);
 
-			return new Level ("0", nodes, vertices);
-		default:
-			return null;
+		nodes = new List<Node> ();
+		vertices = new List<Vertex> ();
+
+		foreach(Vector2 vector in level.nodes) {
+			GameObject nodeObject = Instantiate (nodePrefab) as GameObject;
+			nodeObject.transform.position = new Vector3(vector.x, vector.y, 0);
+
+			Node node = nodeObject.GetComponent<Node> ();
+			nodes.Add (node);
 		}
+
+		foreach(V vector in level.vertices) {
+			GameObject vertexObject = Instantiate (vertexPrefab) as GameObject;
+
+			Vertex vertex = vertexObject.GetComponent<Vertex> ();
+			vertex.input = nodes[(int) vector.input];
+			vertex.output = nodes[(int) vector.output];
+
+			// Add to our global vertices list
+			vertices.Add (vertex);
+
+			// And inform nodes they've been connected
+			vertex.input.AddVertex (vertex);
+			vertex.output.AddVertex (vertex);
+		}
+
+		SelectNode (nodes [0]);
+	}
+
+	public void SelectNode(Node node) {
+		if (selectedNode != null) {
+			selectedNode.DeSelectNode ();
+		}
+
+		selectedNode = node;
+		selectedNode.SelectNode ();
 	}
 }
