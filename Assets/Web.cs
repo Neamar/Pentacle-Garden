@@ -20,20 +20,23 @@ public class Web : MonoBehaviour {
 			return;
 		}
 
-		if (nodesInWeb.Count == 0 && GameManager.instance.currentLevel.selectedNode != null) {
-			AddHook (GameManager.instance.currentLevel.selectedNode);
+		if (nodesInWeb.Count == 0) {
+			if (GameManager.instance.currentLevel.selectedNode != null) {
+				AddHook (GameManager.instance.currentLevel.selectedNode);
+			} else {
+				// Nothing to do, nothing selected
+				return;
+			}
 		}
 
-		if(nodesInWeb.Count > 0) {
-			int length = nodesInWeb.Count + 1;
+		int length = nodesInWeb.Count + 1;
 
-			// Mouse position
-			Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-			mousePosition.z = 0;
+		// Mouse position
+		Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		mousePosition.z = 0;
 
-			lr.positionCount = length;
-			lr.SetPosition (length - 1, mousePosition);
-		}
+		lr.positionCount = length;
+		lr.SetPosition (length - 1, mousePosition);
 	}
 
 	void AddHook(Node node) {
