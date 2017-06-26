@@ -53,4 +53,11 @@ public class Level: MonoBehaviour {
 		selectedNode = node;
 		selectedNode.SelectNode ();
 	}
+
+	public void DeSelectNode() {
+		if (selectedNode != null) {
+			selectedNode.DeSelectNode ();
+			selectedNode = null;
+		}
+	}
 }
