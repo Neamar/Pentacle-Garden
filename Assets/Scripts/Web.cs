@@ -98,6 +98,7 @@ public class Web : MonoBehaviour {
 					// Hooked!
 					AddHook(node, direction);
 					UpdateState (mousePosition);
+					Debug.Log ("ADded " + minAngle + " " + maxAngle + " " + nodesAngle);
 					break;
 				}
 			}
@@ -106,9 +107,9 @@ public class Web : MonoBehaviour {
 		// Do we need to unhook?
 		while(nodesInWeb.Count > 1) {
 			Node previousNode = nodesInWeb [nodesInWeb.Count - 2];
-			float lastAngle = GetAngle (previousNode.transform.position, currentNodePosition);
+			float lastHookingAngle = GetAngle (previousNode.transform.position, currentNodePosition);
 			int lastDirection = hookDirections [hookDirections.Count - 1];
-			if (minAngle < lastAngle && maxAngle > lastAngle && direction != lastDirection) {
+			if (minAngle < lastHookingAngle && maxAngle > lastHookingAngle && direction != lastDirection) {
 				// Unhook!
 				RemoveHook ();
 
