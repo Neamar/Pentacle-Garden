@@ -7,7 +7,7 @@ public class Level: MonoBehaviour {
 	public GameObject vertexPrefab;
 
 	// Current level nodes
-	private List<Node> nodes;
+	public List<Node> nodes;
 	private List<Vertex> vertices;
 
 	public Node selectedNode;
