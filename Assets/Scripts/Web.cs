@@ -70,26 +70,18 @@ public class Web : MonoBehaviour {
 
 
 		UpdateState (mousePosition);
-		// Do we need to unhook?
-		if (nodesInWeb.Count > 1) {
-			Node previousNode = nodesInWeb [nodesInWeb.Count - 2];
-			float lastAngle = GetAngle (previousNode.transform.position, currentNodePosition);
-			int lastDirection = hookDirections [hookDirections.Count - 1];
-			if (lastDirection == 1 && mouseAngle < lastAngle) {
-				// Unhook!
-				UpdateState (mousePosition);
-			}
-		}
 
-		// Do we need to add another hook?
 		float minAngle = Mathf.Min(lastAngle, mouseAngle);
 		float maxAngle = Mathf.Max(lastAngle, mouseAngle);
+		int direction = (int) Mathf.Sign(mouseAngle - lastAngle);
 
+		// Do we need to add another hook?
 		if (minAngle < -Mathf.PI + 1 && maxAngle > Mathf.PI - 1) {
 			// Mouse turned around the [π, -π] point, we need to switch values
 			float swap = minAngle;
 			minAngle = maxAngle;
 			maxAngle = swap + 2 * Mathf.PI;
+			direction = -direction;
 		}
 
 		foreach (Node node in GameManager.instance.currentLevel.nodes) {
@@ -104,9 +96,26 @@ public class Web : MonoBehaviour {
 				float nodesAngle = GetAngle (currentNodePosition, nodePosition);
 				if (nodesAngle > minAngle && nodesAngle < maxAngle) {
 					// Hooked!
-					AddHook(node, -1);
+					Debug.Log("Hook");
+					AddHook(node, direction);
+					UpdateState (mousePosition);
 					break;
 				}
+			}
+		}
+
+		// Do we need to unhook?
+		if (nodesInWeb.Count > 1) {
+			Node previousNode = nodesInWeb [nodesInWeb.Count - 2];
+			float lastAngle = GetAngle (previousNode.transform.position, currentNodePosition);
+			int lastDirection = hookDirections [hookDirections.Count - 1];
+			Debug.Log (minAngle + " " + maxAngle +" " + lastAngle);
+			if (minAngle < lastAngle && maxAngle > lastAngle && direction != lastDirection) {
+				// Unhook!
+				Debug.Log("UNHOOK");
+				RemoveHook ();
+
+				UpdateState (mousePosition);
 			}
 		}
 
