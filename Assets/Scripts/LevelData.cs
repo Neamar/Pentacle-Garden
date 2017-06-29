@@ -15,12 +15,12 @@ public class LevelData
 {
 	public string name;
 	public Vector2[] nodes;
-	public V[] vertices;
+	public V[] edges;
 
 	public LevelData(string name, Vector2[] n, V[] v) {		
 		this.name = name;
 		this.nodes = n;
-		this.vertices = v;
+		this.edges = v;
 	}
 
 	public static LevelData Get(int n) {
@@ -33,7 +33,7 @@ public class LevelData
 				new Vector2 (3, -3),
 				new Vector2 (0, -5),
 			};
-			V[] vertices = {
+			V[] edges = {
 				new V (0, 1),
 				new V (1, 2),
 				new V (2, 3),
@@ -42,7 +42,7 @@ public class LevelData
 				new V (0, 3)
 			};
 
-			return new LevelData ("0", nodes, vertices);
+			return new LevelData ("0", nodes, edges);
 		default:
 			return null;
 		}

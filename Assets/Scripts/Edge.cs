@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vertex : MonoBehaviour {
+public class Edge : MonoBehaviour {
 	public Node input;
 	public Node output;
 

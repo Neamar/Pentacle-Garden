@@ -6,14 +6,14 @@ public class Node : MonoBehaviour {
 	public Material inactiveMaterial;
 	public Material activeMaterial;
 
-	private List<Vertex> vertices = new List<Vertex>();
+	private List<Edge> edges = new List<Edge>();
 
-	public void AddVertex(Vertex vertex) {
-		if(vertex.input != this && vertex.output != this) {
-			throw new UnityException("Vertex shouldn't be added to this node");
+	public void AddEdge(Edge edge) {
+		if(edge.input != this && edge.output != this) {
+			throw new UnityException("Edge shouldn't be added to this node");
 		}
 
-		vertices.Add(vertex);
+		edges.Add(edge);
 	}
 
 	void OnMouseDown() {

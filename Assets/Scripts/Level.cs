@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Level: MonoBehaviour {
 	public GameObject nodePrefab;
-	public GameObject vertexPrefab;
+	public GameObject edgePrefab;
 
 	// Current level nodes
 	public List<Node> nodes;
-	private List<Vertex> vertices;
+	private List<Edge> edges;
 
 	public Node selectedNode;
 
@@ -17,7 +17,7 @@ public class Level: MonoBehaviour {
 		LevelData level = LevelData.Get(levelNumber);
 
 		nodes = new List<Node> ();
-		vertices = new List<Vertex> ();
+		edges = new List<Edge> ();
 
 		foreach(Vector2 vector in level.nodes) {
 			GameObject nodeObject = Instantiate (nodePrefab) as GameObject;
@@ -27,19 +27,19 @@ public class Level: MonoBehaviour {
 			nodes.Add (node);
 		}
 
-		foreach(V vector in level.vertices) {
-			GameObject vertexObject = Instantiate (vertexPrefab) as GameObject;
+		foreach(V vector in level.edges) {
+			GameObject edgeObject = Instantiate (edgePrefab) as GameObject;
 
-			Vertex vertex = vertexObject.GetComponent<Vertex> ();
-			vertex.input = nodes[(int) vector.input];
-			vertex.output = nodes[(int) vector.output];
+			Edge edge = edgeObject.GetComponent<Edge> ();
+			edge.input = nodes[(int) vector.input];
+			edge.output = nodes[(int) vector.output];
 
 			// Add to our global vertices list
-			vertices.Add (vertex);
+			edges.Add (edge);
 
 			// And inform nodes they've been connected
-			vertex.input.AddVertex (vertex);
-			vertex.output.AddVertex (vertex);
+			edge.input.AddEdge (edge);
+			edge.output.AddEdge (edge);
 		}
 
 		SelectNode (nodes [0]);
