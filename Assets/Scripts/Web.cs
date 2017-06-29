@@ -89,16 +89,18 @@ public class Web : MonoBehaviour {
 				continue;
 			}
 
+
 			Vector3 nodePosition = node.transform.position;
 			float squaredDistanceToNode =  (currentNodePosition.x - nodePosition.x) * (currentNodePosition.x - nodePosition.x) + (currentNodePosition.y - nodePosition.y) * (currentNodePosition.y - nodePosition.y);
 
+
 			if (squaredDistanceToMouse > squaredDistanceToNode) {
 				float nodesAngle = GetAngle (currentNodePosition, nodePosition);
-				if (nodesAngle > minAngle && nodesAngle < maxAngle) {
+
+				if (nodesAngle >= minAngle && nodesAngle <= maxAngle) {
 					// Hooked!
 					AddHook(node, direction);
 					UpdateState (mousePosition);
-					Debug.Log ("ADded " + minAngle + " " + maxAngle + " " + nodesAngle);
 					break;
 				}
 			}
@@ -109,7 +111,8 @@ public class Web : MonoBehaviour {
 			Node previousNode = nodesInWeb [nodesInWeb.Count - 2];
 			float lastHookingAngle = GetAngle (previousNode.transform.position, currentNodePosition);
 			int lastDirection = hookDirections [hookDirections.Count - 1];
-			if (minAngle < lastHookingAngle && maxAngle > lastHookingAngle && direction != lastDirection) {
+
+			if (minAngle <= lastHookingAngle && maxAngle >= lastHookingAngle && direction != lastDirection) {
 				// Unhook!
 				RemoveHook ();
 
