@@ -18,7 +18,7 @@ public class Web : MonoBehaviour
 	// Which direction did we hook the nodes? +1 => trigonometric, -1 => clockwise, 0: can't unhook
 	List<int> hookDirections = new List<int> ();
 
-	List<Node> nodesSortedByDistanceToCurrent = new List<Node> ();
+	List<Node> nodesSortedBySquaredDistanceToCurrent = new List<Node> ();
 
 	void Start ()
 	{
@@ -43,12 +43,23 @@ public class Web : MonoBehaviour
 
 	void SortNodeList ()
 	{
-		nodesSortedByDistanceToCurrent.Clear ();
+		nodesSortedBySquaredDistanceToCurrent.Clear ();
 		foreach (Node node in GameManager.instance.currentLevel.nodes) {
-			nodesSortedByDistanceToCurrent.Add (node);
+			nodesSortedBySquaredDistanceToCurrent.Add (node);
 		}
 
-		nodesSortedByDistanceToCurrent.Sort (Sorter);
+		nodesSortedBySquaredDistanceToCurrent.Sort (Sorter);
+	}
+
+	void RestartLevel ()
+	{
+		GameManager.instance.currentLevel.DeSelectNode ();
+		foreach (Node node in GameManager.instance.currentLevel.nodes) {
+			node.DeSelectNode ();
+		}
+		lr.positionCount = 0;
+		nodesInWeb.Clear ();
+		hookDirections.Clear ();
 	}
 	
 	// Update is called once per frame
@@ -60,10 +71,7 @@ public class Web : MonoBehaviour
 
 		// Do we need to restart?
 		if (Input.GetKey (KeyCode.R)) {
-			GameManager.instance.currentLevel.DeSelectNode ();
-			lr.positionCount = 0;
-			nodesInWeb.Clear ();
-			return;
+			RestartLevel ();
 		}
 
 		if (nodesInWeb.Count == 0) {
@@ -93,7 +101,7 @@ public class Web : MonoBehaviour
 		}
 
 		bool hookChanged = false;
-		foreach (Node node in nodesSortedByDistanceToCurrent) {
+		foreach (Node node in nodesSortedBySquaredDistanceToCurrent) {
 			if (node == currentNode) {
 				continue;
 			}
