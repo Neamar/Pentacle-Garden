@@ -2,32 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
-	public static GameManager instance;
+public class GameManager : MonoBehaviour
+{
+	public static GameManager instance = null;
 
+	public int currentLevelNumber = 0;
 	public Level currentLevel;
 
 	//Awake is always called before any Start functions
-	void Awake()
+	void Awake ()
 	{
 		if (instance == null) {
 			instance = this;
 		} else if (instance != this) {
 			// Enforce Singleton pattern
-			Debug.Log("Non singleton GameManager created");
 			Destroy (gameObject);	
 		}
 
 		//Sets this to not be destroyed when reloading scene
-		DontDestroyOnLoad(gameObject);
+		DontDestroyOnLoad (gameObject);
 
-		currentLevel = GetComponent<Level>() as Level;
+		currentLevel = GetComponent<Level> () as Level;
 
 		//Call the InitGame function to initialize the first level 
-		InitLevel();
+		InitLevel ();
 	}
 
-	void InitLevel() {
-		currentLevel.SetupLevel (0);
+	void InitLevel ()
+	{
+		currentLevel.SetupLevel (currentLevelNumber);
+	}
+
+	void LevelWon ()
+	{
+		
 	}
 }

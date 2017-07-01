@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Loader : MonoBehaviour 
+public class Loader : MonoBehaviour
 {
-	public GameObject gameManager;			//GameManager prefab to instantiate.
-
+	public GameManager gameManager;
 
 	void Awake ()
 	{
 		if (GameManager.instance == null) {
-			//Instantiate gameManager prefab
 			Instantiate (gameManager);
-		}
+		}	
 	}
 }
