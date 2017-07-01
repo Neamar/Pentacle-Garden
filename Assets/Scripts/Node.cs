@@ -7,7 +7,7 @@ public class Node : MonoBehaviour
 	public Material inactiveMaterial;
 	public Material activeMaterial;
 
-	private List<Edge> edges = new List<Edge> ();
+	private HashSet<Node> adjacent = new HashSet<Node> ();
 
 	public void AddEdge (Edge edge)
 	{
@@ -15,7 +15,12 @@ public class Node : MonoBehaviour
 			throw new UnityException ("Edge shouldn't be added to this node");
 		}
 
-		edges.Add (edge);
+		adjacent.Add (edge.input == this ? edge.output : edge.input);
+	}
+
+	public bool isAdjacentTo (Node node)
+	{
+		return adjacent.Contains (node);
 	}
 
 	void OnMouseDown ()

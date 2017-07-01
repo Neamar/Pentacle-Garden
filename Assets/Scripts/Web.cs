@@ -19,7 +19,12 @@ using UnityEngine;
  */
 public class Web : MonoBehaviour
 {
+	
 	LineRenderer lr;
+
+	bool hasWon = false;
+
+	// Last known angle, will be used to compare with the new angle
 	float lastAngle = 0;
 
 	// those values are updated by UpdateState() every time a node is added or removed,
@@ -47,6 +52,12 @@ public class Web : MonoBehaviour
 	void Start ()
 	{
 		lr = gameObject.GetComponent<LineRenderer> ();
+	}
+
+	void ToNextLevel ()
+	{
+		RestartWeb ();
+		GameManager.instance.LevelWon ();
 	}
 
 	// Ensure state is up to date.
@@ -86,11 +97,16 @@ public class Web : MonoBehaviour
 		lr.positionCount = 0;
 		nodesInWeb.Clear ();
 		hookDirections.Clear ();
+		hasWon = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
+		if (hasWon) {
+			return;
+		}
+
 		// Mouse position
 		Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		mousePosition.z = 0;
@@ -102,8 +118,7 @@ public class Web : MonoBehaviour
 
 		// Do we need to restart?
 		if (Input.GetKey (KeyCode.A) && GameManager.instance.currentLevelNumber == 0) {
-			RestartWeb ();
-			GameManager.instance.LevelWon ();
+			ToNextLevel ();
 			return;
 		}
 		// First time initialization (or restart)
@@ -187,6 +202,35 @@ public class Web : MonoBehaviour
 			
 		if (hookChanged) {
 			SortNodeList ();
+
+			// Check for victory
+			if (nodesInWeb.Count == GameManager.instance.currentLevel.nodes.Count + 1 && nodesInWeb [0] == nodesInWeb [nodesInWeb.Count - 1]) {
+				// Simple heuristic passed, ensure we have each node once
+				hasWon = true;
+				HashSet<Node> hashSet = new HashSet<Node> ();
+				for (int i = 0; i < nodesInWeb.Count - 1; i++) {
+					Node node = nodesInWeb [i];
+					Node nextNode = nodesInWeb [i + 1];
+
+					if (!node.isAdjacentTo (nextNode)) {
+						hasWon = false;
+						break;
+					}
+					hashSet.Add (node);
+				}
+
+				if (hashSet.Count != GameManager.instance.currentLevel.nodes.Count) {
+					hasWon = false;
+				}
+
+				if (hasWon) {
+					// +1, because it's a cycle and the first node appears twice in our drawing
+					lr.positionCount = hashSet.Count + 1;
+					Invoke ("ToNextLevel", 1);
+
+					return;
+				}
+			}
 		}
 
 		// Store currentAngle as lastAngle, which means next frame we'll start from there.
