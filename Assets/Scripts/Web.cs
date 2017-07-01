@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Web : MonoBehaviour {
+public class Web : MonoBehaviour
+{
 	LineRenderer lr;
 	float lastAngle = 0;
-	bool cleared = false;
 
 	Node currentNode;
 	Vector3 currentNodePosition;
@@ -13,24 +13,47 @@ public class Web : MonoBehaviour {
 	float mouseAngle;
 
 	// Which nodes are currently part of our web?
-	List<Node> nodesInWeb = new List<Node>();
+	List<Node> nodesInWeb = new List<Node> ();
 
 	// Which direction did we hook the nodes? +1 => trigonometric, -1 => clockwise, 0: can't unhook
-	List<int> hookDirections = new List<int>();
+	List<int> hookDirections = new List<int> ();
 
-	void Start () {
-		lr = gameObject.GetComponent<LineRenderer>();
+	List<Node> nodesSortedByDistanceToCurrent = new List<Node> ();
+
+	void Start ()
+	{
+		lr = gameObject.GetComponent<LineRenderer> ();
 	}
 
-	void UpdateState(Vector3 mousePosition) {
+	void UpdateState (Vector3 mousePosition)
+	{
 		currentNode = LastNode ();
+		squaredDistanceToMouse = currentNode.distanceTo (mousePosition);
 		currentNodePosition = currentNode.transform.position;
-		squaredDistanceToMouse = (currentNodePosition.x - mousePosition.x) * (currentNodePosition.x - mousePosition.x) + (currentNodePosition.y - mousePosition.y) * (currentNodePosition.y - mousePosition.y);
 		mouseAngle = GetAngle (currentNodePosition, mousePosition);
+	}
+
+	int Sorter (Node n1, Node n2)
+	{
+		float n1Distance = currentNode.distanceTo (n1);
+		float n2Distance = currentNode.distanceTo (n2);
+
+		return (int)(n1Distance - n2Distance);
+	}
+
+	void SortNodeList ()
+	{
+		nodesSortedByDistanceToCurrent.Clear ();
+		foreach (Node node in GameManager.instance.currentLevel.nodes) {
+			nodesSortedByDistanceToCurrent.Add (node);
+		}
+
+		nodesSortedByDistanceToCurrent.Sort (Sorter);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		// Mouse position
 		Vector3 mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		mousePosition.z = 0;
@@ -43,37 +66,22 @@ public class Web : MonoBehaviour {
 			return;
 		}
 
-		// Temporary cheat
-		if (Input.GetKey (KeyCode.Space) && nodesInWeb.Count > 1) {
-			if (!cleared) {
-				Debug.Log ("Removing hook");
-				RemoveHook ();
-				// Update last known angle
-				lastAngle = GetAngle (LastNode().transform.position, mousePosition);
-
-				cleared = true;
-				return;
-			}
-		}
-		else {
-			cleared = false;
-		}
-
 		if (nodesInWeb.Count == 0) {
 			if (GameManager.instance.currentLevel.selectedNode != null) {
 				AddHook (GameManager.instance.currentLevel.selectedNode, 0);
+				currentNode = LastNode ();
+				SortNodeList ();
 			} else {
 				// Nothing to do, nothing selected
 				return;
 			}
 		}
 
-
 		UpdateState (mousePosition);
 
-		float minAngle = Mathf.Min(lastAngle, mouseAngle);
-		float maxAngle = Mathf.Max(lastAngle, mouseAngle);
-		int direction = (int) Mathf.Sign(mouseAngle - lastAngle);
+		float minAngle = Mathf.Min (lastAngle, mouseAngle);
+		float maxAngle = Mathf.Max (lastAngle, mouseAngle);
+		int direction = (int)Mathf.Sign (mouseAngle - lastAngle);
 
 		// Do we need to add another hook?
 		if (minAngle < -Mathf.PI + 1 && maxAngle > Mathf.PI - 1) {
@@ -84,30 +92,30 @@ public class Web : MonoBehaviour {
 			direction = -direction;
 		}
 
-		foreach (Node node in GameManager.instance.currentLevel.nodes) {
+		bool hookChanged = false;
+		foreach (Node node in nodesSortedByDistanceToCurrent) {
 			if (node == currentNode) {
 				continue;
 			}
 
 
 			Vector3 nodePosition = node.transform.position;
-			float squaredDistanceToNode =  (currentNodePosition.x - nodePosition.x) * (currentNodePosition.x - nodePosition.x) + (currentNodePosition.y - nodePosition.y) * (currentNodePosition.y - nodePosition.y);
-
+			float squaredDistanceToNode = currentNode.distanceTo (node);
 
 			if (squaredDistanceToMouse > squaredDistanceToNode) {
 				float nodesAngle = GetAngle (currentNodePosition, nodePosition);
 
 				if (nodesAngle >= minAngle && nodesAngle <= maxAngle) {
 					// Hooked!
-					AddHook(node, direction);
+					AddHook (node, direction);
 					UpdateState (mousePosition);
-					break;
+					hookChanged = true;
 				}
 			}
 		}
 
 		// Do we need to unhook?
-		while(nodesInWeb.Count > 1) {
+		while (nodesInWeb.Count > 1) {
 			Node previousNode = nodesInWeb [nodesInWeb.Count - 2];
 			float lastHookingAngle = GetAngle (previousNode.transform.position, currentNodePosition);
 			int lastDirection = hookDirections [hookDirections.Count - 1];
@@ -115,11 +123,15 @@ public class Web : MonoBehaviour {
 			if (minAngle <= lastHookingAngle && maxAngle >= lastHookingAngle && direction != lastDirection) {
 				// Unhook!
 				RemoveHook ();
-
 				UpdateState (mousePosition);
+				hookChanged = true;
 			} else {
 				break;
 			}
+		}
+			
+		if (hookChanged) {
+			SortNodeList ();
 		}
 
 		lastAngle = mouseAngle;
@@ -129,7 +141,8 @@ public class Web : MonoBehaviour {
 		lr.SetPosition (length - 1, mousePosition);
 	}
 
-	void AddHook(Node node, int direction) {
+	void AddHook (Node node, int direction)
+	{
 		// position: current number of hook + the one we're adding + the mouse (so + 2)
 		lr.positionCount = nodesInWeb.Count + 2;
 		lr.SetPosition (nodesInWeb.Count, node.transform.position);
@@ -139,9 +152,10 @@ public class Web : MonoBehaviour {
 	}
 
 	// Remove the last added hook
-	void RemoveHook() {
-		Node lastNode = nodesInWeb[nodesInWeb.Count - 1];
-		lastNode.DeSelectNode();
+	void RemoveHook ()
+	{
+		Node lastNode = nodesInWeb [nodesInWeb.Count - 1];
+		lastNode.DeSelectNode ();
 
 		nodesInWeb.RemoveAt (nodesInWeb.Count - 1);
 		hookDirections.RemoveAt (hookDirections.Count - 1);
@@ -150,12 +164,14 @@ public class Web : MonoBehaviour {
 		lr.positionCount = nodesInWeb.Count + 1;
 	}
 
-	float GetAngle(Vector3 p1, Vector3 p2) {
+	float GetAngle (Vector3 p1, Vector3 p2)
+	{
 		float angle = Mathf.Atan2 (p2.y - p1.y, p2.x - p1.x);
 		return angle;
 	}
 
-	Node LastNode() {
+	Node LastNode ()
+	{
 		return nodesInWeb [nodesInWeb.Count - 1];
 	}
 }
