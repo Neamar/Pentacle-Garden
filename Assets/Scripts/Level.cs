@@ -8,10 +8,10 @@ public class Level: MonoBehaviour
 	public GameObject edgePrefab;
 
 	// Current level nodes
-	public List<Node> nodes;
-	private List<Edge> edges;
+	[HideInInspector] public List<Node> nodes;
+	[HideInInspector] private List<Edge> edges;
 
-	public Node selectedNode;
+	[HideInInspector] public Node selectedNode;
 
 
 	public void SetupLevel (int levelNumber)

@@ -100,6 +100,12 @@ public class Web : MonoBehaviour
 			RestartWeb ();
 		}
 
+		// Do we need to restart?
+		if (Input.GetKey (KeyCode.A) && GameManager.instance.currentLevelNumber == 0) {
+			RestartWeb ();
+			GameManager.instance.LevelWon ();
+			return;
+		}
 		// First time initialization (or restart)
 		if (nodesInWeb.Count == 0) {
 			if (GameManager.instance.currentLevel.selectedNode == null) {

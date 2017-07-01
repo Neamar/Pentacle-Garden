@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,18 +24,38 @@ public class GameManager : MonoBehaviour
 		DontDestroyOnLoad (gameObject);
 
 		currentLevel = GetComponent<Level> () as Level;
-
-		//Call the InitGame function to initialize the first level 
-		InitLevel ();
 	}
 
 	void InitLevel ()
 	{
+		Debug.Log ("InitLevel " + currentLevelNumber);
 		currentLevel.SetupLevel (currentLevelNumber);
 	}
 
-	void LevelWon ()
+	public void LevelWon ()
 	{
-		
+		currentLevelNumber += 1;
+		Debug.Log ("Setting up level " + currentLevelNumber);
+		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex, LoadSceneMode.Single);
+	}
+
+	//This is called each time a scene is loaded.
+	void OnLevelFinishedLoading (Scene scene, LoadSceneMode mode)
+	{
+		//Call InitGame to initialize our level.
+		InitLevel ();
+	}
+
+	void OnEnable ()
+	{
+		//Tell our ‘OnLevelFinishedLoading’ function to start listening for a scene change event as soon as this script is enabled.
+		SceneManager.sceneLoaded += OnLevelFinishedLoading;
+	}
+
+	void OnDisable ()
+	{
+		//Tell our ‘OnLevelFinishedLoading’ function to stop listening for a scene change event as soon as this script is disabled.
+		//Remember to always have an unsubscription for every delegate you subscribe to!
+		SceneManager.sceneLoaded -= OnLevelFinishedLoading;
 	}
 }
