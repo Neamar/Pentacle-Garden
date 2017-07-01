@@ -116,8 +116,8 @@ public class Web : MonoBehaviour
 			RestartWeb ();
 		}
 
-		// Do we need to restart?
-		if (Input.GetKey (KeyCode.A) && GameManager.instance.currentLevelNumber == 0) {
+		// Are we cheating?
+		if (Input.GetKey (KeyCode.A)) {
 			ToNextLevel ();
 			return;
 		}
