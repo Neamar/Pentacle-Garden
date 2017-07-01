@@ -134,14 +134,18 @@ public class Web : MonoBehaviour {
 		lr.positionCount = nodesInWeb.Count + 2;
 		lr.SetPosition (nodesInWeb.Count, node.transform.position);
 		nodesInWeb.Add (node);
+		node.SelectNode ();
 		hookDirections.Add (direction);
 	}
 
 	// Remove the last added hook
 	void RemoveHook() {
+		Node lastNode = nodesInWeb[nodesInWeb.Count - 1];
+		lastNode.DeSelectNode();
+
 		nodesInWeb.RemoveAt (nodesInWeb.Count - 1);
 		hookDirections.RemoveAt (hookDirections.Count - 1);
-
+		
 		// position: current number of hook + the mouse (so + 1)
 		lr.positionCount = nodesInWeb.Count + 1;
 	}

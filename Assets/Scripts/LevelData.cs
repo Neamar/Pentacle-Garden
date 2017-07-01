@@ -26,8 +26,8 @@ public class LevelData
 	public static LevelData Get(int n) {
 		
 		String[] levels = {
+			"-3,-3;-3,3;3,3;3,-3;0,-5|0,1;1,2;2,3;3,4;4,0;0,3",
 			"-3,-3;3,-3|0,1",
-			"-3,-3;-3,3;3,3;,3,-3;0,-5|0,1;1,2;2,3;3,4;4,0;0,3"
 		};
 
 		string currentLevel = levels [n];
