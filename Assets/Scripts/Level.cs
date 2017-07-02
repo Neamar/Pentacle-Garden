@@ -21,8 +21,10 @@ public class Level: MonoBehaviour
 		nodes = new List<Node> ();
 		edges = new List<Edge> ();
 
+		int count = 0;
 		foreach (Vector2 vector in level.nodes) {
 			GameObject nodeObject = Instantiate (nodePrefab) as GameObject;
+			nodeObject.name = "Node #" + count++;
 			nodeObject.transform.position = new Vector3 (vector.x, vector.y, 0);
 
 			Node node = nodeObject.GetComponent<Node> ();
@@ -31,7 +33,7 @@ public class Level: MonoBehaviour
 
 		foreach (V vector in level.edges) {
 			GameObject edgeObject = Instantiate (edgePrefab) as GameObject;
-
+			edgeObject.name = "Edge " + vector.input + "-" + vector.output;
 			Edge edge = edgeObject.GetComponent<Edge> ();
 			edge.input = nodes [(int)vector.input];
 			edge.output = nodes [(int)vector.output];
