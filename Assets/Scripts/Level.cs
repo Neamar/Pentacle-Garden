@@ -16,7 +16,7 @@ public class Level: MonoBehaviour
 
 	public void SetupLevel (int levelNumber)
 	{
-		LevelData level = LevelData.Get (levelNumber);
+		LevelData level = LevelData.Get (levelNumber, ScreenResolution.GetCurrentViewport ());
 
 		nodes = new List<Node> ();
 		edges = new List<Edge> ();

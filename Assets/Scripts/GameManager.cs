@@ -27,15 +27,15 @@ public class GameManager : MonoBehaviour
 		currentLevel = GetComponent<Level> () as Level;
 	}
 
-	void InitLevel ()
-	{
-		Debug.Log ("InitLevel " + currentLevelNumber);
-		currentLevel.SetupLevel (currentLevelNumber);
-	}
-
 	public void LevelWon ()
 	{
 		currentLevelNumber += 1;
+		LoadCurrentLevelAsScene ();
+	}
+
+
+	public void LoadCurrentLevelAsScene ()
+	{
 		Debug.Log ("Setting up level " + currentLevelNumber);
 		SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex, LoadSceneMode.Single);
 	}
@@ -44,8 +44,9 @@ public class GameManager : MonoBehaviour
 	void OnLevelFinishedLoading (Scene scene, LoadSceneMode mode)
 	{
 		web.ResetWeb ();
-		//Call InitGame to initialize our level.
-		InitLevel ();
+
+		Debug.Log ("InitLevel " + currentLevelNumber);
+		currentLevel.SetupLevel (currentLevelNumber);
 	}
 
 	void OnEnable ()

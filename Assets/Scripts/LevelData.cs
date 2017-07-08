@@ -26,9 +26,11 @@ public class LevelData
 		this.edges = v;
 	}
 
-	public static LevelData Get (int n)
+	public static LevelData Get (int n, Rect currentViewport)
 	{
-		
+
+		Rect defaultViewport = new Rect (-10, -10, 20, 20);
+
 		String[] levels = {
 			"-3,-3;-3,3;3,3;3,-3;0,-5|0,1;1,2;2,3;3,4;4,0;0,3",
 			"5.08,3.75;5.08,6.25;3.86,8.33;3.86,1.67;2.23,2.92;2.23,7.08;-1.42,3.75;-1.42,6.25|6,4;4,5;5,7;7,1;1,0;0,3;3,2;2,1;6,0;6,7",
@@ -58,7 +60,8 @@ public class LevelData
 		int i;
 		for (i = 0; i < nodes.Length; i++) {
 			String[] nodeString = nodesString [i].Split (',');
-			nodes [i] = new Vector2 (float.Parse (nodeString [0]), float.Parse (nodeString [1]));
+			Vector2 originalCoordinates = new Vector2 (float.Parse (nodeString [0]), float.Parse (nodeString [1]));
+			nodes [i] = translateCoordinates (defaultViewport, currentViewport, originalCoordinates);
 		}
 			
 		for (i = 0; i < edges.Length; i++) {
@@ -67,5 +70,15 @@ public class LevelData
 		}
 
 		return new LevelData (n.ToString (), nodes, edges);
+	}
+
+	static Vector2 translateCoordinates (Rect original, Rect target, Vector2 point)
+	{
+		Vector2 translated = new Vector2 ();
+
+		translated.x = (point.x - original.center.x) / original.width * target.width;
+		translated.y = (point.y - original.center.y) / original.height * target.height;
+
+		return translated;
 	}
 }
