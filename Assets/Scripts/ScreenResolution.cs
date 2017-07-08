@@ -31,7 +31,7 @@ public class ScreenResolution : MonoBehaviour
 	public static Rect GetCurrentViewport ()
 	{
 		Vector3 origin = Camera.main.ScreenToWorldPoint (new Vector3 (0, 0, 0));
-		Vector3 bounds = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0));
+		Vector3 bounds = Camera.main.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0)) * 2;
 
 		return new Rect (origin.x, origin.y, bounds.x, bounds.y);
 	}
