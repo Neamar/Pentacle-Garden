@@ -264,7 +264,11 @@ public class Web : MonoBehaviour
 	void RemoveHook ()
 	{
 		Node lastNode = nodesInWeb [nodesInWeb.Count - 1];
-		lastNode.DeSelectNode ();
+
+		if (nodesInWeb.IndexOf (lastNode) == nodesInWeb.Count - 1) {
+			// Deselect node only if it's not in our list more than once
+			lastNode.DeSelectNode ();
+		}
 
 		nodesInWeb.RemoveAt (nodesInWeb.Count - 1);
 		hookDirections.RemoveAt (hookDirections.Count - 1);
