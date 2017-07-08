@@ -56,7 +56,6 @@ public class Web : MonoBehaviour
 
 	void ToNextLevel ()
 	{
-		RestartWeb ();
 		GameManager.instance.LevelWon ();
 	}
 
@@ -86,7 +85,7 @@ public class Web : MonoBehaviour
 	}
 
 	// Completely restarts the web,
-	// Deslects everything, empty all arrays
+	// Deselects everything, empty all arrays
 	// and undraw everything.
 	void RestartWeb ()
 	{
@@ -94,10 +93,19 @@ public class Web : MonoBehaviour
 		foreach (Node node in GameManager.instance.currentLevel.nodes) {
 			node.DeSelectNode ();
 		}
-		lr.positionCount = 0;
+		ResetWeb ();
+	}
+
+	// Resets the web to be used for another level (or the same one reloaded)
+	public void ResetWeb ()
+	{
 		nodesInWeb.Clear ();
 		hookDirections.Clear ();
 		hasWon = false;
+
+		if (lr != null) {
+			lr.positionCount = 0;
+		}
 	}
 	
 	// Update is called once per frame

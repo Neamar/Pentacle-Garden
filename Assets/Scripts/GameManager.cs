@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
 	public int currentLevelNumber = 0;
 	public Level currentLevel;
+	public Web web;
 
 	//Awake is always called before any Start functions
 	void Awake ()
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
 	//This is called each time a scene is loaded.
 	void OnLevelFinishedLoading (Scene scene, LoadSceneMode mode)
 	{
+		web.ResetWeb ();
 		//Call InitGame to initialize our level.
 		InitLevel ();
 	}
