@@ -30,14 +30,14 @@ public class Node : MonoBehaviour
 
 	public void SelectNode ()
 	{
-		MeshRenderer meshRenderer = transform.Find ("Sphere").GetComponent<MeshRenderer> () as MeshRenderer;
-		meshRenderer.material = activeMaterial;
+        SpriteRenderer spriteRenderer = transform.Find ("node").GetComponent<SpriteRenderer> () as SpriteRenderer;
+        spriteRenderer.color = Color.red;
 	}
 
 	public void DeSelectNode ()
 	{
-		MeshRenderer meshRenderer = transform.Find ("Sphere").GetComponent<MeshRenderer> () as MeshRenderer;
-		meshRenderer.material = inactiveMaterial;
+        SpriteRenderer spriteRenderer = transform.Find("node").GetComponent<SpriteRenderer>() as SpriteRenderer;
+        spriteRenderer.color = Color.white;
 	}
 
 	public float distanceTo (Node node)
