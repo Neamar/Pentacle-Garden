@@ -255,8 +255,17 @@ public class Web : MonoBehaviour
 		// position: current number of hook + the one we're adding + the mouse (so + 2)
 		lr.positionCount = nodesInWeb.Count + 2;
 		lr.SetPosition (nodesInWeb.Count, node.transform.position);
+
+        if(nodesInWeb.Contains(node))
+        {
+            node.ErroredNode();
+        }
+        else
+        {
+            node.SelectNode();
+        }
 		nodesInWeb.Add (node);
-		node.SelectNode ();
+
 		hookDirections.Add (direction);
 	}
 
@@ -265,16 +274,26 @@ public class Web : MonoBehaviour
 	{
 		Node lastNode = nodesInWeb [nodesInWeb.Count - 1];
 
-		if (nodesInWeb.IndexOf (lastNode) == nodesInWeb.Count - 1) {
-			// Deselect node only if it's not in our list more than once
-			lastNode.DeSelectNode ();
-		}
-
 		nodesInWeb.RemoveAt (nodesInWeb.Count - 1);
 		hookDirections.RemoveAt (hookDirections.Count - 1);
-		
-		// position: current number of hook + the mouse (so + 1)
-		lr.positionCount = nodesInWeb.Count + 1;
+
+        if (!nodesInWeb.Contains(lastNode))
+        {
+            // Deselect node only if it's not in our list more than once
+            lastNode.DeSelectNode();
+        }
+        else if (nodesInWeb.IndexOf(lastNode) == nodesInWeb.LastIndexOf(lastNode))
+        {
+            lastNode.SelectNode();
+        }
+        else
+        {
+            Debug.Log("IO:" + nodesInWeb.IndexOf(lastNode) + " LIO" + nodesInWeb.LastIndexOf(lastNode));
+            lastNode.ErroredNode();
+        }
+
+        // position: current number of hook + the mouse (so + 1)
+        lr.positionCount = nodesInWeb.Count + 1;
 	}
 
 	// Return the angle between two specified vectors, value between ]-π,π]

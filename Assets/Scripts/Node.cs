@@ -31,7 +31,7 @@ public class Node : MonoBehaviour
 	public void SelectNode ()
 	{
         SpriteRenderer spriteRenderer = transform.Find ("node").GetComponent<SpriteRenderer> () as SpriteRenderer;
-        spriteRenderer.color = Color.red;
+        spriteRenderer.color = Color.gray;
 	}
 
 	public void DeSelectNode ()
@@ -40,7 +40,13 @@ public class Node : MonoBehaviour
         spriteRenderer.color = Color.white;
 	}
 
-	public float distanceTo (Node node)
+    public void ErroredNode()
+    {
+        SpriteRenderer spriteRenderer = transform.Find("node").GetComponent<SpriteRenderer>() as SpriteRenderer;
+        spriteRenderer.color = Color.red;
+    }
+
+    public float distanceTo (Node node)
 	{
 		return distanceTo (node.transform.position);
 	}
