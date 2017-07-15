@@ -8,6 +8,12 @@ public class Edge : MonoBehaviour
 	public Node output;
 
 	private LineRenderer lr;
+
+    public void FromEditor()
+    {
+        Start();
+    }
+
 	// Use this for initialization
 	void Start ()
 	{
