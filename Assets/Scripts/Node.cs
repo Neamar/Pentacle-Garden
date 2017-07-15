@@ -7,7 +7,7 @@ public class Node : MonoBehaviour
 	public Material inactiveMaterial;
 	public Material activeMaterial;
 
-	private HashSet<Node> adjacent = new HashSet<Node> ();
+	public HashSet<Node> adjacent = new HashSet<Node> ();
 
 	public void AddEdge (Edge edge)
 	{

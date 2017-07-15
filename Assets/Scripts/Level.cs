@@ -45,6 +45,8 @@ public class Level: MonoBehaviour
 			edge.input.AddEdge (edge);
 			edge.output.AddEdge (edge);
 		}
+
+        new Solver(this);
 	}
 
 	public void SelectNode (Node node)
